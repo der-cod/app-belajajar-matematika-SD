@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#3b82f6"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><title>Belajar Matematika SD Kelas 1–6</title>
+<style>
+:root{--bg:#fffaf0;--fg:#1f2937;--card:#fff;--mut:#6b7280;--ac:#3b82f6;--bd:#e5e7eb;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111827;--fg:#f3f4f6;--card:#1f2937;--mut:#9ca3af;--bd:#374151;color-scheme:dark}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;line-height:1.5}
+.w{max-width:860px;margin:0 auto;padding:16px}
+h1{font-size:1.5rem;margin:.2em 0}p.sub{color:var(--mut);margin:0 0 12px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.tabs button{flex:1;min-width:90px;padding:12px 8px;border:2px solid var(--bd);border-radius:14px;background:var(--card);color:var(--fg);font:inherit;font-weight:700;cursor:pointer}
+.tabs button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.list{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.list button{text-align:left;padding:14px;border:2px solid var(--bd);border-radius:14px;background:var(--card);color:var(--fg);font:inherit;cursor:pointer}
+.list button.on{border-color:var(--ac)}.list small{display:block;color:var(--mut)}
+.sim{margin-top:16px;background:var(--card);border:2px solid var(--bd);border-radius:18px;padding:16px}
+.sim h2{margin:0 0 4px;font-size:1.2rem}.d{color:var(--mut);margin:0 0 12px}
+label{display:block;margin:8px 0;font-weight:600}input[type=range]{width:100%;accent-color:var(--ac)}
+#out{min-height:120px;padding:12px;border-radius:12px;border:2px dashed var(--bd);font-size:1.6rem;line-height:1.5;overflow-x:auto}
+#sum{margin-top:12px;padding:12px;border-radius:12px;background:var(--bg);font-size:1.1rem;font-weight:600}
+.bar{display:flex;border:2px solid var(--fg);height:42px;border-radius:6px;overflow:hidden;margin:6px 0;max-width:480px}
+.bar b{flex:1;border-right:2px solid var(--fg)}.bar b:last-child{border:0}
+.grid{display:grid;gap:2px;margin:6px 0}.grid i{border-radius:3px;border:1px solid var(--bd)}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.15;margin:0 4px;font-size:1.1rem}
+.fr b{border-bottom:2px solid var(--fg);padding:0 6px}
+.g{opacity:.25}.box{display:inline-block;border:2px solid var(--fg);border-radius:10px;padding:4px 8px;margin:4px;vertical-align:top}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end}.lb{font-size:.9rem;color:var(--mut)}
+.kb{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:320px}.kb button{padding:14px;font:inherit;font-size:1.3rem;border-radius:12px;border:2px solid var(--bd);background:var(--card);color:var(--fg);cursor:pointer}.kb .w2{grid-column:span 4;background:var(--ac);color:#fff;border-color:var(--ac)}
+.bt{padding:12px 16px;margin:4px;font:inherit;font-size:1.2rem;border-radius:12px;border:2px solid var(--bd);background:var(--card);color:var(--fg);cursor:pointer}.opt{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}
+svg{max-width:100%;height:auto}svg text{fill:var(--fg)}
+</style></head><body><div class="w">
+<h1>🧮 Belajar Matematika SD</h1>
+<p class="sub">Mengikuti pendekatan matematika Singapura: lihat gambarnya, pahami caranya, lalu latihan 20 soal tiap kelas. Trik cepat tanpa kalkulator!</p>
+<div class="tabs" id="tabs"></div><div class="list" id="list"></div>
+<div class="sim" id="sim"></div></div>
+<script>
+const $=s=>document.querySelector(s),A='#3b82f6',B='#f97316',C='#22c55e',D='#ec4899';
+const W='nol,satu,dua,tiga,empat,lima,enam,tujuh,delapan,sembilan,sepuluh,sebelas,dua belas,tiga belas,empat belas,lima belas,enam belas,tujuh belas,delapan belas,sembilan belas,dua puluh'.split(',');
+const E=(n,e)=>{let s='';for(let i=0;i<n;i++)s+=e+((i+1)%10?'':'<br>');return s};
+const fr=(a,b)=>`<span class=fr><b>${a}</b><span>${b}</span></span>`;
+const bar=(d,f)=>`<div class=bar>${Array.from({length:d},(_,i)=>`<b style="background:${f(i)||'transparent'}"></b>`).join('')}</div>`;
+const grid=(r,c,f,z=24)=>`<div class=grid style="grid-template-columns:repeat(${c},${z}px)">${Array.from({length:r*c},(_,i)=>`<i style="width:${z}px;height:${z}px;background:${f(i)||'transparent'}"></i>`).join('')}</div>`;
+const gcd=(a,b)=>b?gcd(b,a%b):a,p2=n=>String(n).padStart(2,'0'),id=x=>String(x).replace('.',',');
+const sq=(w,h,c)=>`<i style="display:inline-block;width:${w}px;height:${h}px;background:${c};margin:1px;border-radius:3px"></i>`;
+const T={
+1:[
+{t:'Mengenal Bilangan 1–20',e:'🍎',d:'Hitung banyak apel, lalu baca bilangannya.',c:[['n','Banyak apel',1,20,7]],
+ f:v=>({h:E(v.n,'🍎'),s:`Ada <b>${v.n}</b> apel. Dibaca: <b>${W[v.n]}</b>.`})},
+{t:'Penjumlahan',e:'➕',d:'Menjumlahkan berarti menggabungkan dua kelompok benda.',c:[['a','Kelompok biru',0,10,3],['b','Kelompok oranye',0,10,4]],
+ f:v=>({h:`${E(v.a,'🔵')}<br>➕<br>${E(v.b,'🟠')}`,s:`${v.a} + ${v.b} = <b>${v.a+v.b}</b>`})},
+{t:'Pengurangan',e:'➖',d:'Mengurangi berarti mengambil sebagian benda. Yang bertanda ❌ diambil.',c:[['a','Banyak kue',1,15,8],['b','Diambil',0,15,3]],
+ f:v=>{const b=Math.min(v.b,v.a);return{h:Array.from({length:v.a},(_,i)=>i<v.a-b?'🍪':'<span class=g>🍪</span>').join(''),s:`${v.a} − ${b} = <b>${v.a-b}</b> (sisa kue yang tidak pudar)`}}},
+{t:'Membandingkan Bilangan',e:'⚖️',d:'Tanda > berarti lebih besar, < lebih kecil, = sama banyak.',c:[['a','Biru',0,20,8],['b','Oranye',0,20,5]],
+ f:v=>({h:E(v.a,'🔵')+'<br>'+E(v.b,'🟠'),s:`${v.a} <b>${v.a>v.b?'&gt;':v.a<v.b?'&lt;':'='}</b> ${v.b} → ${v.a>v.b?'biru lebih banyak':v.a<v.b?'oranye lebih banyak':'sama banyak'}`})},
+{t:'Bangun Datar',e:'🔺',d:'Kenali bangun datar dari jumlah sisi dan sudutnya.',c:[['k','Pilih bangun (1–4)',1,4,1]],
+ f:v=>{const S=[['Segitiga','<polygon points="80,10 150,110 10,110"','3 sisi dan 3 sudut'],['Persegi','<rect x="30" y="10" width="100" height="100"','4 sisi sama panjang dan 4 sudut siku-siku'],['Persegi panjang','<rect x="10" y="25" width="140" height="70"','4 sisi, sisi yang berhadapan sama panjang'],['Lingkaran','<circle cx="80" cy="60" r="52"','tidak punya sudut, sisinya melengkung']][v.k-1];return{h:`<svg width="180" viewBox="0 0 160 120">${S[1]} fill="${B}55" stroke="${B}" stroke-width="3"/></svg>`,s:`<b>${S[0]}</b>: ${S[2]}`}}},
+{t:'Pola Bilangan',e:'🔁',d:'Pola bilangan naik dengan selisih yang sama. Temukan bilangan berikutnya!',c:[['a','Bilangan awal',1,10,2],['b','Naik setiap',1,5,3]],
+ f:v=>({h:Array.from({length:6},(_,i)=>`<span class=box>${i<5?v.a+i*v.b:'?'}</span>`).join(' → '),s:`Naik ${v.b} setiap langkah. Bilangan berikutnya: <b>${v.a+5*v.b}</b>`})}],
+2:[
+{t:'Nilai Tempat',e:'🔢',d:'Setiap angka punya nilai sesuai tempatnya: ratusan, puluhan, satuan.',c:[['r','Ratusan',0,9,2],['p','Puluhan',0,9,3],['s','Satuan',0,9,5]],
+ f:v=>({h:`<div class=row><div>${Array(v.r).fill(sq(40,40,A)).join('')||'–'}<div class=lb>Ratusan</div></div><div>${Array(v.p).fill(sq(10,40,B)).join('')||'–'}<div class=lb>Puluhan</div></div><div>${Array(v.s).fill(sq(10,10,C)).join('')||'–'}<div class=lb>Satuan</div></div></div>`,
+ s:`${v.r}×100 + ${v.p}×10 + ${v.s}×1 = <b>${v.r*100+v.p*10+v.s}</b>`})},
+{t:'Perkalian = Penjumlahan Berulang',e:'✖️',d:'3 × 4 artinya 3 kelompok yang masing-masing berisi 4.',c:[['g','Banyak kelompok',1,6,3],['n','Isi tiap kelompok',1,6,4]],
+ f:v=>({h:Array(v.g).fill(`<span class=box>${E(v.n,'🍓')}</span>`).join(''),s:`${Array(v.g).fill(v.n).join(' + ')} = ${v.g} × ${v.n} = <b>${v.g*v.n}</b>`})},
+{t:'Membaca Jam',e:'🕐',d:'Jarum pendek menunjukkan jam, jarum panjang menunjukkan menit.',c:[['h','Jam',1,12,3],['m','Menit',0,55,0,5]],
+ f:v=>{const ha=((v.h%12)+v.m/60)*30,ma=v.m*6,P=(a,l)=>`${100+l*Math.sin(a*Math.PI/180)},${100-l*Math.cos(a*Math.PI/180)}`;
+ let n='';for(let i=1;i<=12;i++){const[x,y]=P(i*30,78).split(',');n+=`<text x="${x}" y="${+y+5}" text-anchor="middle" font-size="14">${i}</text>`}
+ return{h:`<svg width="230" viewBox="0 0 200 200"><circle cx="100" cy="100" r="92" fill="none" stroke="currentColor" stroke-width="3"/>${n}<line x1="100" y1="100" x2="${P(ha,50).split(',')[0]}" y2="${P(ha,50).split(',')[1]}" stroke="${A}" stroke-width="6" stroke-linecap="round"/><line x1="100" y1="100" x2="${P(ma,72).split(',')[0]}" y2="${P(ma,72).split(',')[1]}" stroke="${B}" stroke-width="4" stroke-linecap="round"/><circle cx="100" cy="100" r="5"/></svg>`,s:`Pukul <b>${p2(v.h)}.${p2(v.m)}</b>`}}},
+{t:'Penjumlahan Bersusun',e:'📝',d:'Jumlahkan satuan dulu. Jika hasilnya 10 atau lebih, simpan 1 puluhan.',c:[['a','Bilangan pertama',10,79,47],['b','Bilangan kedua',10,79,36]],
+ f:v=>{const u=v.a%10+v.b%10;return{h:`<pre style="margin:0;font:inherit;font-family:monospace">${u>=10?' ¹':' '}\n ${v.a}\n+${v.b}\n───\n${String(v.a+v.b).padStart(3)}</pre>`,s:`Satuan: ${v.a%10} + ${v.b%10} = ${u}${u>=10?' → tulis '+u%10+', simpan 1':''}<br>Hasil: <b>${v.a+v.b}</b>`}}},
+{t:'Uang',e:'💰',d:'Jumlahkan nilai semua uang untuk tahu totalnya.',c:[['a','Koin Rp500',0,6,2],['b','Koin Rp1.000',0,6,1],['c','Uang kertas Rp2.000',0,6,2]],
+ f:v=>({h:'🪙'.repeat(v.a)+'🥇'.repeat(v.b)+'💵'.repeat(v.c)||'–',s:`${v.a}×500 + ${v.b}×1.000 + ${v.c}×2.000 = <b>Rp${(v.a*500+v.b*1000+v.c*2000).toLocaleString('id-ID')}</b>`})},
+{t:'Mengukur Panjang',e:'📏',d:'Letakkan ujung benda tepat di angka 0 pada penggaris.',c:[['n','Panjang pensil (cm)',1,15,8]],
+ f:v=>{let k='';for(let i=0;i<=15;i++)k+=`<line x1="${10+i*20}" y1="50" x2="${10+i*20}" y2="64" stroke="currentColor"/><text x="${10+i*20}" y="78" text-anchor="middle" font-size="11">${i}</text>`;return{h:`<svg width="100%" viewBox="0 0 320 90"><rect x="10" y="20" width="${v.n*20}" height="22" fill="${B}" rx="4"/><line x1="10" y1="50" x2="310" y2="50" stroke="currentColor" stroke-width="2"/>${k}</svg>`,s:`Panjang pensil = <b>${v.n} cm</b>`}}}],
+3:[
+{t:'Perkalian (Susunan Baris & Kolom)',e:'🔲',d:'Perkalian bisa digambar sebagai baris dan kolom.',c:[['r','Baris',1,10,3],['k','Kolom',1,10,5]],
+ f:v=>({h:grid(v.r,v.k,()=>C,28),s:`${v.r} baris × ${v.k} kolom = <b>${v.r*v.k}</b>`})},
+{t:'Pembagian',e:'➗',d:'Membagi berarti membagi rata ke beberapa kelompok. Yang tidak habis disebut sisa.',c:[['t','Banyak benda',1,30,14],['k','Banyak kelompok',1,6,4]],
+ f:v=>{const q=Math.floor(v.t/v.k),r=v.t%v.k;return{h:Array(v.k).fill(`<span class=box>${q?E(q,'🟡'):'–'}</span>`).join('')+(r?`<br><span class=lb>Sisa:</span> ${E(r,'🟡')}`:''),s:`${v.t} ÷ ${v.k} = <b>${q}</b>${r?` sisa <b>${r}</b>`:''}`}}},
+{t:'Pecahan',e:'🍕',d:'Pecahan menunjukkan bagian dari keseluruhan yang dibagi sama besar.',c:[['d','Penyebut (jumlah bagian)',2,8,4],['n','Pembilang (bagian diarsir)',0,8,1]],
+ f:v=>{const n=Math.min(v.n,v.d);return{h:bar(v.d,i=>i<n&&A)+fr(n,v.d),s:`Pembilang <b>${n}</b>, penyebut <b>${v.d}</b>: ${n} bagian dari ${v.d} bagian sama besar.`}}},
+{t:'Membandingkan Pecahan',e:'🆚',d:'Bandingkan panjang bagian yang diarsir pada dua bar.',c:[['n','Pembilang A',1,6,1],['d','Penyebut A',2,6,2],['m','Pembilang B',1,6,1],['e','Penyebut B',2,6,3]],
+ f:v=>{const n=Math.min(v.n,v.d),m=Math.min(v.m,v.e),x=n*v.e,y=m*v.d;return{h:fr(n,v.d)+bar(v.d,i=>i<n&&A)+fr(m,v.e)+bar(v.e,i=>i<m&&B),s:`${n}/${v.d} <b>${x>y?'&gt;':x<y?'&lt;':'='}</b> ${m}/${v.e}`}}},
+{t:'Perkalian di Garis Bilangan',e:'🐸',d:'Setiap loncatan sama panjang. n loncatan sebesar k sampai di n × k.',c:[['k','Panjang tiap loncatan',1,9,3],['n','Banyak loncatan',1,10,4]],
+ f:v=>{let a='',k='';for(let i=0;i<v.n;i++){const x=10+i*v.k*3.5,y=x+v.k*3.5;a+=`<path d="M${x} 60 Q${(x+y)/2} 10 ${y} 60" fill="none" stroke="${B}" stroke-width="2.5"/>`}for(let i=0;i<=90;i+=v.k)k+=`<text x="${10+i*3.5}" y="88" text-anchor="middle" font-size="9">${i}</text>`;return{h:`<svg width="100%" viewBox="0 0 330 95"><line x1="10" y1="60" x2="325" y2="60" stroke="currentColor" stroke-width="2"/>${a}${k}</svg>`,s:`${v.n} × ${v.k} = <b>${v.n*v.k}</b>`}}},
+{t:'Uang dan Kembalian',e:'🧾',d:'Kembalian = uang yang dibayar dikurangi harga. Satu kotak = Rp1.000.',c:[['h','Harga (ribu rupiah)',1,9,6],['b','Dibayar (ribu rupiah)',5,10,10]],
+ f:v=>{const b=Math.max(v.b,v.h);return{h:grid(1,b,i=>i<v.h?B:C,30),s:`Rp${b}.000 − Rp${v.h}.000 = <b>Rp${b-v.h}.000</b> <span class=lb>(oranye: harga, hijau: kembalian)</span>`}}}],
+4:[
+{t:'Pecahan Senilai',e:'⚖️',d:'Kalikan pembilang dan penyebut dengan bilangan yang sama, nilainya tetap.',c:[['n','Pembilang',1,5,1],['d','Penyebut',2,6,2],['k','Dikali',1,4,2]],
+ f:v=>{const n=Math.min(v.n,v.d),k=v.k;return{h:bar(v.d,i=>i<n&&A)+bar(v.d*k,i=>i<n*k&&B),s:`${fr(n,v.d)} = ${fr(n*k+'',v.d*k)} <span class=lb>(pembilang dan penyebut sama-sama dikali ${k})</span>`}}},
+{t:'Keliling dan Luas',e:'📐',d:'Keliling = panjang sisi di sekeliling. Luas = banyak petak di dalam.',c:[['p','Panjang',1,10,6],['l','Lebar',1,10,4]],
+ f:v=>({h:grid(v.l,v.p,()=>D,26),s:`Keliling = 2 × (${v.p} + ${v.l}) = <b>${2*(v.p+v.l)}</b> satuan<br>Luas = ${v.p} × ${v.l} = <b>${v.p*v.l}</b> petak`})},
+{t:'Sudut',e:'📏',d:'Besar sudut diukur dengan derajat (°).',c:[['a','Besar sudut (°)',0,180,60,5]],
+ f:v=>{const r=v.a*Math.PI/180,x=20+160*Math.cos(r),y=150-160*Math.sin(r),ax=20+40*Math.cos(r),ay=150-40*Math.sin(r),j=v.a==90?'siku-siku':v.a==180?'lurus':v.a<90?'lancip':'tumpul';
+ return{h:`<svg width="320" viewBox="0 0 200 160"><line x1="20" y1="150" x2="180" y2="150" stroke="currentColor" stroke-width="3"/><line x1="20" y1="150" x2="${x}" y2="${y}" stroke="${B}" stroke-width="3"/><path d="M60 150 A40 40 0 ${v.a>180?1:0} 0 ${ax} ${ay}" fill="none" stroke="${A}" stroke-width="3"/></svg>`,s:`Sudut <b>${v.a}°</b> → sudut <b>${j}</b>`}}},
+{t:'Pecahan Campuran',e:'🥧',d:'Pecahan tak sebenarnya (pembilang ≥ penyebut) dapat ditulis sebagai bilangan bulat dan pecahan.',c:[['n','Pembilang',1,20,7],['d','Penyebut',2,6,3]],
+ f:v=>{const w=Math.floor(v.n/v.d),r=v.n%v.d;return{h:Array(w).fill(bar(v.d,()=>A)).join('')+(r?bar(v.d,i=>i<r&&B):''),s:`${fr(v.n,v.d)} = <b>${w||''}</b>${r?fr(r,v.d):''}`}}},
+{t:'Pembulatan',e:'🎯',d:'Satuan 5 atau lebih dibulatkan ke atas. Kurang dari 5 dibulatkan ke bawah.',c:[['n','Bilangan',0,999,347]],
+ f:v=>({h:`<div>${v.n}</div>`+bar(10,i=>i<v.n%10&&A)+`<div class=lb>Angka satuan: ${v.n%10}</div>`,s:`Ke puluhan terdekat: <b>${Math.round(v.n/10)*10}</b><br>Ke ratusan terdekat: <b>${Math.round(v.n/100)*100}</b>`})},
+{t:'KPK dan FPB',e:'🔗',d:'Kelipatan yang sama (oranye) menunjukkan KPK. FPB adalah faktor persekutuan terbesar.',c:[['a','Bilangan A',2,24,6],['b','Bilangan B',2,24,8]],
+ f:v=>{const g=gcd(v.a,v.b),l=v.a*v.b/g,M=x=>Array.from({length:10},(_,i)=>x*(i+1)).map(m=>m%l==0?`<b style="color:${B}">${m}</b>`:m).join(', ');return{h:`<div style="font-size:1.1rem">Kelipatan ${v.a}: ${M(v.a)}<br>Kelipatan ${v.b}: ${M(v.b)}</div>`,s:`KPK = <b>${l}</b>, FPB = <b>${g}</b>`}}}],
+5:[
+{t:'Penjumlahan Pecahan',e:'🧩',d:'Jika penyebut sama, jumlahkan pembilangnya saja. Penyebut tetap.',c:[['d','Penyebut',2,10,5],['a','Pembilang pertama',1,10,3],['b','Pembilang kedua',1,10,4]],
+ f:v=>{const d=v.d,a=Math.min(v.a,d),b=Math.min(v.b,d),t=a+b,w=Math.floor(t/d),r=t%d;
+ return{h:bar(d,i=>i<a&&A)+bar(d,i=>i<b&&B)+'<div class=lb>Hasil:</div>'+bar(d,i=>(i<Math.min(t,d))&&(i<a?A:B))+(t>d?bar(d,i=>i<t-d&&B):''),
+ s:`${fr(a,d)} + ${fr(b,d)} = ${fr(t,d)}${t>=d?` = <b>${w}</b>${r?fr(r,d):''}`:''}`}}},
+{t:'Pecahan, Desimal, dan Persen',e:'💯',d:'Satu kotak besar dibagi 100 petak. Isi sebagian petak untuk melihat persennya.',c:[['p','Persen (%)',0,100,35]],
+ f:v=>({h:grid(10,10,i=>i<v.p&&C,22),s:`${v.p}% = ${fr(v.p,100)} = <b>${id(v.p/100)}</b>`})},
+{t:'Volume Balok',e:'📦',d:'Volume = banyak kubus satuan yang mengisi balok, lapis demi lapis.',c:[['p','Panjang',1,6,4],['l','Lebar',1,6,3],['t','Tinggi (jumlah lapis)',1,6,2]],
+ f:v=>({h:'<div class=row>'+Array.from({length:v.t},(_,i)=>`<div>${grid(v.l,v.p,()=>['#38bdf8','#818cf8','#a78bfa','#f472b6','#fb923c','#facc15'][i],14)}<div class=lb>Lapis ${i+1}</div></div>`).join('')+'</div>',s:`V = ${v.p} × ${v.l} × ${v.t} = <b>${v.p*v.l*v.t}</b> kubus satuan`})},
+{t:'Perkalian Pecahan',e:'🔳',d:'Kotak ungu muda (bertumpuk) menunjukkan hasil perkalian dua pecahan.',c:[['a','Pembilang 1',1,5,2],['b','Penyebut 1',2,6,3],['c','Pembilang 2',1,5,1],['d','Penyebut 2',2,6,2]],
+ f:v=>{const a=Math.min(v.a,v.b),c=Math.min(v.c,v.d);return{h:grid(v.d,v.b,i=>{const x=i%v.b<a,y=Math.floor(i/v.b)<c;return x&&y?D:x?A+'88':y?B+'88':''},34),s:`${fr(a,v.b)} × ${fr(c,v.d)} = ${fr(a*c,v.b*v.d)}`}}},
+{t:'Kecepatan, Jarak, Waktu',e:'🚗',d:'Jarak = kecepatan × waktu.',c:[['v','Kecepatan (km/jam)',10,100,60,10],['t','Waktu (jam)',1,6,3]],
+ f:v=>({h:`<div style="border-bottom:3px solid;padding-bottom:4px"><span style="display:inline-block;margin-left:${v.t*v.v/600*88}%">🚗</span></div>`,s:`Jarak = ${v.v} × ${v.t} = <b>${v.v*v.t} km</b>`})},
+{t:'Luas Segitiga',e:'🔼',d:'Segitiga adalah setengah dari persegi panjang dengan alas dan tinggi yang sama.',c:[['a','Alas',1,10,6],['t','Tinggi',1,10,5]],
+ f:v=>({h:`<svg width="240" viewBox="0 0 220 210"><rect x="10" y="${205-v.t*20}" width="${v.a*20}" height="${v.t*20}" fill="none" stroke="${A}" stroke-dasharray="5"/><polygon points="10,205 ${10+v.a*20},205 ${10+v.a*10},${205-v.t*20}" fill="${C}66" stroke="${C}" stroke-width="3"/></svg>`,s:`L = ½ × ${v.a} × ${v.t} = <b>${id(v.a*v.t/2)}</b>`})}],
+6:[
+{t:'Perbandingan (Rasio)',e:'⚗️',d:'Rasio membandingkan dua banyak. Bisa disederhanakan seperti pecahan.',c:[['a','Banyak biru',1,9,6],['b','Banyak oranye',1,9,4]],
+ f:v=>{const g=gcd(v.a,v.b);return{h:E(v.a,'🔵')+'<br>'+E(v.b,'🟠'),s:`${v.a} : ${v.b} = <b>${v.a/g} : ${v.b/g}</b> ${g>1?`<span class=lb>(dibagi ${g})</span>`:'<span class=lb>(sudah paling sederhana)</span>'}`}}},
+{t:'Lingkaran',e:'⭕',d:'Keliling = 2 × π × r. Luas = π × r × r. Di sini π = 3,14.',c:[['r','Jari-jari (r)',1,10,5]],
+ f:v=>{const R=v.r*12;return{h:`<svg width="260" viewBox="0 0 260 260"><circle cx="130" cy="130" r="${R}" fill="${A}33" stroke="${A}" stroke-width="3"/><line x1="130" y1="130" x2="${130+R}" y2="130" stroke="${B}" stroke-width="3"/><circle cx="130" cy="130" r="4"/><text x="${130+R/2}" y="122" text-anchor="middle" font-size="14">r = ${v.r}</text></svg>`,
+ s:`Diameter = ${2*v.r}<br>Keliling = 2 × 3,14 × ${v.r} = <b>${id((6.28*v.r).toFixed(2))}</b><br>Luas = 3,14 × ${v.r} × ${v.r} = <b>${id((3.14*v.r*v.r).toFixed(2))}</b>`}}},
+{t:'Bilangan Bulat (Garis Bilangan)',e:'🌡️',d:'Tambah positif: geser ke kanan. Tambah negatif: geser ke kiri.',c:[['s','Mulai dari',-10,10,-3],['t','Ditambah',-10,10,5]],
+ f:v=>{const X=n=>20+(n+20)*9,e=v.s+v.t;let k='';for(let i=-20;i<=20;i+=5)k+=`<line x1="${X(i)}" y1="70" x2="${X(i)}" y2="82" stroke="currentColor"/><text x="${X(i)}" y="98" text-anchor="middle" font-size="12">${i}</text>`;
+ return{h:`<svg width="400" viewBox="0 0 400 110"><defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="${B}"/></marker></defs><line x1="10" y1="76" x2="390" y2="76" stroke="currentColor" stroke-width="2"/>${k}<line x1="${X(v.s)}" y1="40" x2="${X(e)+(v.t<0?4:-4)*(v.t?1:0)}" y2="40" stroke="${B}" stroke-width="4" marker-end="url(#ar)"/><circle cx="${X(v.s)}" cy="76" r="6" fill="${A}"/><circle cx="${X(e)}" cy="76" r="6" fill="${C}"/></svg>`,s:`${v.s} + (${v.t}) = <b>${e}</b> <span class=lb>(biru: mulai, hijau: hasil)</span>`}}},
+{t:'Skala pada Peta',e:'🗺️',d:'Skala 1 : k artinya 1 cm di peta mewakili k cm sebenarnya.',c:[['k','Skala 1 : (×100.000)',1,10,5],['n','Jarak di peta (cm)',1,10,4]],
+ f:v=>({h:`<div style="height:14px;background:${A};width:${v.n*10}%;border-radius:7px"></div>`,s:`Skala 1 : ${(v.k*100000).toLocaleString('id-ID')}<br>${v.n} cm di peta = <b>${v.n*v.k} km</b> sebenarnya`})},
+{t:'Statistika (Rata-rata, Median, Modus)',e:'📊',d:'Atur lima nilai lalu lihat rata-rata, median, dan modusnya.',c:[['x1','Nilai 1',1,10,3],['x2','Nilai 2',1,10,5],['x3','Nilai 3',1,10,5],['x4','Nilai 4',1,10,7],['x5','Nilai 5',1,10,10]],
+ f:v=>{const x=[v.x1,v.x2,v.x3,v.x4,v.x5],o=[...x].sort((a,b)=>a-b),m=x.reduce((a,b)=>a+b)/5,c={};x.forEach(z=>c[z]=(c[z]||0)+1);const mx=Math.max(...Object.values(c)),mo=Object.keys(c).filter(k=>c[k]==mx);return{h:`<div class=row>${x.map(z=>`<div style="text-align:center"><div style="width:30px;height:${z*14}px;background:${C};border-radius:4px 4px 0 0"></div><div class=lb>${z}</div></div>`).join('')}</div>`,s:`Rata-rata = <b>${id(+m.toFixed(1))}</b><br>Median = <b>${o[2]}</b><br>Modus = <b>${mx>1?mo.join(', '):'tidak ada'}</b>`}}},
+{t:'Volume Tabung',e:'🥫',d:'Volume = luas alas (π × r × r) × tinggi.',c:[['r','Jari-jari (r)',1,7,4],['t','Tinggi (t)',1,10,6]],
+ f:v=>{const R=v.r*8,H=v.t*12,Y=R*.35;return{h:`<svg width="220" viewBox="0 0 200 190"><path d="M${100-R} ${20+Y} v${H} a${R} ${Y} 0 0 0 ${2*R} 0 v${-H}" fill="${A}44" stroke="${A}" stroke-width="3"/><ellipse cx="100" cy="${20+Y}" rx="${R}" ry="${Y}" fill="${A}88" stroke="${A}" stroke-width="3"/></svg>`,s:`V = 3,14 × ${v.r} × ${v.r} × ${v.t} = <b>${id((3.14*v.r*v.r*v.t).toFixed(2))}</b> satuan kubik`}}}],
+7:[
+{t:'Kali 9 dengan Jari',e:'🖐️',d:'Lipat jari ke-n. Jari di kiri lipatan = puluhan, jari di kanan = satuan.',c:[['n','9 dikali berapa (1–10)',1,10,7]],
+ f:v=>({h:Array.from({length:10},(_,i)=>i==v.n-1?'<span class=box style="background:#9ca3af55">✊</span>':'<span class=box>☝️</span>').join(''),s:`Kiri: <b>${v.n-1}</b> jari (puluhan), kanan: <b>${10-v.n}</b> jari (satuan)<br>9 × ${v.n} = <b>${9*v.n}</b>`})},
+{t:'Kali 5: Kali 10 lalu Bagi 2',e:'✋',d:'Mengalikan 5 sama dengan mengalikan 10 lalu membagi dua. Lebih mudah!',c:[['n','Bilangan',1,40,18]],
+ f:v=>({h:`${v.n} × 10 = ${v.n*10}<br>${v.n*10} ÷ 2 = ${v.n*5}`,s:`${v.n} × 5 = <b>${v.n*5}</b>`})},
+{t:'Kali 11',e:'1️⃣',d:'Untuk bilangan dua angka: jumlahkan kedua angkanya, taruh di tengah.',c:[['t','Angka puluhan',1,9,3],['u','Angka satuan',0,9,4]],
+ f:v=>{const s=v.t+v.u,n=10*v.t+v.u;return{h:`${v.t} <b style="color:${B}">${s}</b> ${v.u}`+(s>=10?`<br><span class=lb>${s} lebih dari 9 → simpan 1 ke angka di depannya</span>`:''),s:`${n} × 11 = <b>${n*11}</b>`}}},
+{t:'Tambah 7, 8, atau 9',e:'🧠',d:'Tambahkan 10 dulu, lalu kurangi kelebihannya.',c:[['a','Bilangan',11,90,46],['b','Ditambah',7,9,8]],
+ f:v=>({h:`${v.a} + ${v.b}<br>= ${v.a} + 10 − ${10-v.b}<br>= ${v.a+10} − ${10-v.b}`,s:`Hasil: <b>${v.a+v.b}</b>`})},
+{t:'Kuadrat Bilangan Berakhiran 5',e:'🔟',d:'Kalikan angka depan dengan angka berikutnya, lalu tulis 25 di belakang.',c:[['t','Angka depan',1,9,7]],
+ f:v=>({h:`${v.t}5 × ${v.t}5<br>${v.t} × ${v.t+1} = ${v.t*(v.t+1)}, lalu tulis 25`,s:`${v.t}5 × ${v.t}5 = <b>${v.t*(v.t+1)}25</b>`})}
+,{t:'Buat 10 Dulu (Metode Singapura)',e:'🔟',d:'Lengkapi ke 10, lalu tambahkan sisanya. Contoh: 8 + 5 → 8 + 2 + 3 (kelas 1–2).',c:[['a','Bilangan pertama',6,9,8],['b','Bilangan kedua',4,9,5]],
+ f:v=>{const k=10-v.a,r=v.b-k;return{h:r>0?`${v.a} + ${v.b}<br>= ${v.a} + <b style="color:${B}">${k}</b> + ${r}<br>= 10 + ${r}`:`${v.a} + ${v.b} (tidak melewati 10)`,s:`Hasil: <b>${v.a+v.b}</b>`}}},
+{t:'Kurang 7, 8, atau 9',e:'➖',d:'Kurangi 10 dulu, lalu tambahkan kembali kelebihannya (kelas 2–3).',c:[['a','Bilangan',20,99,64],['b','Dikurangi',7,9,8]],
+ f:v=>({h:`${v.a} − ${v.b}<br>= ${v.a} − 10 + ${10-v.b}<br>= ${v.a-10} + ${10-v.b}`,s:`Hasil: <b>${v.a-v.b}</b>`})},
+{t:'Kali 4 dan Kali 8: Gandakan',e:'✌️',d:'Kali 4 = gandakan dua kali. Kali 8 = gandakan tiga kali (kelas 3).',c:[['n','Bilangan',2,25,14]],
+ f:v=>({h:`${v.n} → ${v.n*2} → ${v.n*4} <span class=lb>(kali 4)</span><br>→ ${v.n*8} <span class=lb>(kali 8)</span>`,s:`${v.n} × 4 = <b>${v.n*4}</b>; ${v.n} × 8 = <b>${v.n*8}</b>`})},
+{t:'Kali dengan Memecah Bilangan',e:'✂️',d:'Pecah menjadi puluhan dan satuan, kalikan terpisah, lalu jumlahkan (kelas 3–4).',c:[['a','Bilangan',12,49,34],['b','Pengali',3,9,6]],
+ f:v=>{const t=Math.floor(v.a/10)*10,u=v.a%10;return{h:`${v.a} × ${v.b}<br>= (${t} × ${v.b}) + (${u} × ${v.b})<br>= ${t*v.b} + ${u*v.b}`,s:`Hasil: <b>${v.a*v.b}</b>`}}},
+{t:'Bagi 5: Kali 2 lalu Bagi 10',e:'🪄',d:'Membagi 5 sama dengan mengalikan 2 lalu membagi 10 (kelas 4–5).',c:[['n','Kelipatan 5',5,200,85,5]],
+ f:v=>({h:`${v.n} × 2 = ${v.n*2}<br>${v.n*2} ÷ 10 = ${id(v.n/5)}`,s:`${v.n} ÷ 5 = <b>${id(v.n/5)}</b>`})},
+{t:'Persen Cepat',e:'💯',d:'10% = bagi 10, 25% = bagi 4, 50% = bagi 2 (kelas 5–6).',c:[['p','Pilih (1=10%, 2=20%, 3=25%, 4=50%)',1,4,3],['b','Bilangan',20,200,80,20]],
+ f:v=>{const P=[10,20,25,50][v.p-1],c=['bagi 10','bagi 10 lalu kali 2','bagi 4','bagi 2'][v.p-1];return{h:`${P}% dari ${v.b} → ${c}`,s:`${P}% × ${v.b} = <b>${P*v.b/100}</b>`}}}]
+};
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const Q={
+1:[()=>{const a=R(1,10),b=R(1,10);return[`${a} + ${b} = ?`,a+b,'Penjumlahan']},
+()=>{const a=R(6,18),b=R(1,a-1);return[`${a} − ${b} = ?`,a-b,'Pengurangan']},
+()=>{const a=R(1,9);return[`${a} + ? = 10`,10-a,'Penjumlahan']},
+()=>{const a=R(1,5),d=R(1,4);return[`${a}, ${a+d}, ${a+2*d}, ${a+3*d}, ?`,a+4*d,'Pola Bilangan']},
+()=>{const a=R(1,20);let b=R(1,20);if(b==a)b++;return[`Mana yang lebih besar: ${a} atau ${b}?`,Math.max(a,b),'Membandingkan Bilangan']}],
+2:[()=>{const a=R(10,59),b=R(10,39);return[`${a} + ${b} = ?`,a+b,'Penjumlahan Bersusun']},
+()=>{const a=R(40,99),b=R(10,39);return[`${a} − ${b} = ?`,a-b,'Pengurangan']},
+()=>{const a=R(2,5),b=R(2,5);return[`${a} × ${b} = ?`,a*b,'Perkalian = Penjumlahan Berulang']},
+()=>{const n=R(10,99);return[`Angka puluhan pada bilangan ${n} bernilai ...`,Math.floor(n/10)*10,'Nilai Tempat']},
+()=>{const a=R(1,4),b=R(1,3);return[`${a} koin Rp500 dan ${b} koin Rp1.000. Jumlah uang (Rp) = ?`,a*500+b*1000,'Uang']},
+()=>{const h=R(1,12);return[`Jarum pendek di angka ${h}, jarum panjang di angka 6. Pukul ${h}.? (menit)`,30,'Membaca Jam']}],
+3:[()=>{const a=R(3,9),b=R(3,9);return[`${a} × ${b} = ?`,a*b,'Perkalian (Susunan Baris & Kolom)']},
+()=>{const a=R(3,9),b=R(3,9);return[`${a*b} ÷ ${b} = ?`,a,'Pembagian']},
+()=>{const d=R(2,8),n=R(1,d-1);return[`Sebuah pizza dibagi ${d} sama besar, ${n} bagian dimakan. Berapa penyebut pecahan ${n}/${d}?`,d,'Pecahan']},
+()=>{const h=R(1,9);return[`Harga Rp${h}.000, dibayar Rp10.000. Kembalian (ribu rupiah)?`,10-h,'Uang dan Kembalian']},
+()=>{const a=R(1,5);return[`${a} jam = ... menit`,a*60,'Membaca Jam']},
+()=>{const g=R(3,9),n=R(2,6);return[`${g} kelompok, tiap kelompok ${n} kelereng. Jumlah kelereng?`,g*n,'Perkalian di Garis Bilangan']}],
+4:[()=>{const p=R(3,12),l=R(2,9);return[`Persegi panjang ${p} cm × ${l} cm. Kelilingnya (cm)?`,2*(p+l),'Keliling dan Luas']},
+()=>{const p=R(3,12),l=R(2,9);return[`Persegi panjang ${p} cm × ${l} cm. Luasnya (cm²)?`,p*l,'Keliling dan Luas']},
+()=>{const k=R(2,6),a=k*R(2,5),b=k*R(2,5);return[`FPB dari ${a} dan ${b} = ?`,gcd(a,b),'KPK dan FPB']},
+()=>{const a=R(2,9),b=R(2,9);return[`KPK dari ${a} dan ${b} = ?`,a*b/gcd(a,b),'KPK dan FPB']},
+()=>{const n=R(11,999);return[`${n} dibulatkan ke puluhan terdekat = ?`,Math.round(n/10)*10,'Pembulatan']},
+()=>{const d=R(2,5),n=R(1,d-1),k=R(2,4);return[`${n}/${d} = ?/${d*k}`,n*k,'Pecahan Senilai']},
+()=>{const d=R(2,6),w=R(1,4),r=R(1,d-1);return[`${w*d+r}/${d} = ${w} dan ?/${d}`,r,'Pecahan Campuran']},
+()=>{const a=R(20,150);return[`Dua sudut berpelurus (180°). Satu sudut ${a}°. Sudut lainnya (°)?`,180-a,'Sudut']}],
+5:[()=>{const p=[10,20,25,50][R(0,3)],b=[40,80,120,200][R(0,3)];return[`${p}% dari ${b} = ?`,p*b/100,'Persen Cepat']},
+()=>{const a=2*R(2,6),t=R(2,9);return[`Segitiga alas ${a} cm, tinggi ${t} cm. Luasnya (cm²)?`,a*t/2,'Luas Segitiga']},
+()=>{const p=R(2,6),l=R(2,6),t=R(2,6);return[`Balok ${p} × ${l} × ${t} cm. Volumenya (cm³)?`,p*l*t,'Volume Balok']},
+()=>{const v=10*R(3,10),t=R(2,5);return[`Mobil melaju ${v} km/jam selama ${t} jam. Jaraknya (km)?`,v*t,'Kecepatan, Jarak, Waktu']},
+()=>{const d=R(4,10),a=R(1,Math.floor(d/2)),b=R(1,d-a);return[`${a}/${d} + ${b}/${d} = ?/${d}`,a+b,'Penjumlahan Pecahan']},
+()=>{const a=R(12,49),b=R(3,9);return[`${a} × ${b} = ?`,a*b,'Kali dengan Memecah Bilangan']}],
+6:[()=>{const a=R(1,5),b=R(1,5),k=R(2,6);return[`Kelereng A : B = ${a} : ${b}. Jika A = ${a*k}, maka B = ?`,b*k,'Perbandingan (Rasio)']},
+()=>{const n=R(2,15);return[`Skala 1 : 100.000. Jarak di peta ${n} cm. Jarak sebenarnya (km)?`,n,'Skala pada Peta']},
+()=>{const x=R(5,15),d1=R(1,4),d2=R(1,4),a=[x-d1,x+d1,x-d2,x+d2].sort(()=>Math.random()-.5);return[`Rata-rata dari ${a.join(', ')} = ?`,x,'Statistika (Rata-rata, Median, Modus)']},
+()=>{const r=7*R(1,3);return[`Keliling lingkaran r = ${r} cm (π = 22/7). Kelilingnya (cm)?`,44*r/7,'Lingkaran']},
+()=>{const a=R(-9,9),b=R(-9,9);return[`${a} + (${b}) = ?`,a+b,'Bilangan Bulat (Garis Bilangan)']},
+()=>{const p=[10,20,25,50][R(0,3)],b=[60,120,160,400][R(0,3)];return[`${p}% dari ${b} = ?`,p*b/100,'Persen Cepat']}]
+};
+for(let k=1;k<=6;k++)T[k].push({t:'Latihan Soal Kelas '+k,e:'📝',prac:1});
+let qs=[],qi=0,sc=0,st={},tl=0,tt=0;const NQ=20;
+function qz(){clearInterval(tt);st={};qs=Array.from({length:NQ},()=>{const f=Q[g][R(0,Q[g].length-1)],[q,a,m]=f(),o=new Set([a]);while(o.size<4){const x=a+[1,2,3,5,10][R(0,4)]*(R(0,1)?1:-1);if(a>=0&&x<0)continue;o.add(x)}return{q,a,m,o:[...o].sort(()=>Math.random()-.5)}});qi=0;sc=0;qn()}
+function qn(){if(qi>=NQ){const m=sc>=18?'Hebat sekali! 🌟':sc>=14?'Bagus! Terus berlatih 💪':'Ayo pelajari lagi materinya, lalu coba lagi 📚';
+ const an=Object.entries(st).sort((a,b)=>a[1][0]/a[1][1]-b[1][0]/b[1][1]).map(([k,x])=>`${x[0]/x[1]<.6?'⚠️':'✅'} ${k}: ${x[0]}/${x[1]} benar`).join('<br>');
+ sim.innerHTML=`<h2>Skor Akhir</h2><div id=out style="text-align:center;font-size:3rem">${sc} / ${NQ}</div><div id=sum>${m}<br><br><b>Analisa per materi:</b><br>${an}<br><span class=lb>⚠️ = perlu dilatih lagi (lihat materinya di daftar kelas)</span></div><p><button class=bt onclick="qz()">🔁 Ulangi (soal baru)</button></p>`;return}
+ const x=qs[qi];tl=30;clearInterval(tt);tt=setInterval(()=>{tl--;const e=$('#tm');if(e)e.textContent='⏱️ '+tl+' dtk';if(tl<=0)qa(null)},1000);
+ sim.innerHTML=`<h2>📝 Latihan Kelas ${g} <span class=lb>Soal ${qi+1} dari ${NQ} · </span><span class=lb id=tm>⏱️ 30 dtk</span></h2><div id=out>${x.q}</div><div class=opt>${x.o.map(o=>`<button class=bt onclick="qa(${o})">${o}</button>`).join('')}</div><div id=sum style="display:none"></div>`}
+function qa(o){clearInterval(tt);const x=qs[qi],ok=o!==null&&o==x.a;if(ok)sc++;st[x.m]=st[x.m]||[0,0];st[x.m][1]++;if(ok)st[x.m][0]++;
+ document.querySelectorAll('.opt button').forEach(b=>{b.disabled=true;if(+b.textContent==x.a)b.style.background='#22c55e55'});
+ const s=$('#sum');s.style.display='block';s.innerHTML=(ok?'✅ Benar!':`${o===null?'⏰ Waktu habis. ':'❌ Belum tepat. '}Jawaban: <b>${x.a}</b>`)+`<br><span class=lb>Materi terkait: ${x.m}</span><br><button class=bt onclick="qi++;qn()">${qi<NQ-1?'Lanjut ➡️':'Lihat skor'}</button>`}
+let g=1,cur=null;
+const tabs=$('#tabs'),list=$('#list'),sim=$('#sim');
+function drawTabs(){tabs.innerHTML=[1,2,3,4,5,6,7].map(k=>`<button class="${k==g?'on':''}" onclick="g=${k};drawTabs();pick(0)">${k==7?'⚡ Trik Cepat':'Kelas '+k}</button>`).join('');
+ list.innerHTML=T[g].map((x,i)=>`<button id="b${i}" onclick="pick(${i})">${x.e} <b>${x.t}</b></button>`).join('')}
+function pick(i){cur=T[g][i];document.querySelectorAll('.list button').forEach((b,j)=>b.classList.toggle('on',j==i));if(cur.prac)return qz();
+ sim.innerHTML=`<h2>${cur.e} ${cur.t} ${g<7?`<span class=lb>(Kelas ${g})</span>`:''}</h2><p class=d>${cur.d}</p>`+cur.c.map(c=>`<label>${c[1]}: <b id="v_${c[0]}">${c[4]}</b><input type=range id="${c[0]}" min=${c[2]} max=${c[3]} step=${c[5]||1} value=${c[4]} oninput="upd()"></label>`).join('')+'<div id=out></div><div id=sum></div>';upd()}
+function upd(){const v={};cur.c.forEach(c=>{v[c[0]]=+$('#'+c[0]).value;$('#v_'+c[0]).textContent=v[c[0]]});const r=cur.f(v);$('#out').innerHTML=r.h;$('#sum').innerHTML=r.s}
+drawTabs();pick(0);
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script></body></html>
