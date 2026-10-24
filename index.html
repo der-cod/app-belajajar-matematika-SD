@@ -29,6 +29,7 @@ label{display:block;margin:8px 0;font-weight:600}input[type=range]{width:100%;ac
 .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end}.lb{font-size:.9rem;color:var(--mut)}
 .kb{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:320px}.kb button{padding:14px;font:inherit;font-size:1.3rem;border-radius:12px;border:2px solid var(--bd);background:var(--card);color:var(--fg);cursor:pointer}.kb .w2{grid-column:span 4;background:var(--ac);color:#fff;border-color:var(--ac)}
 .bt{padding:12px 16px;margin:4px;font:inherit;font-size:1.2rem;border-radius:12px;border:2px solid var(--bd);background:var(--card);color:var(--fg);cursor:pointer}.opt{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}
+.ex{background:var(--bg);border:2px solid var(--bd);border-radius:12px;padding:8px 12px;margin:0 0 12px}.ex summary{cursor:pointer;font-weight:700}.ex p{margin:6px 0}
 svg{max-width:100%;height:auto}svg text{fill:var(--fg)}
 </style></head><body><div class="w">
 <h1>🧮 Belajar Matematika SD</h1>
@@ -155,6 +156,57 @@ const T={
 {t:'Persen Cepat',e:'💯',d:'10% = bagi 10, 25% = bagi 4, 50% = bagi 2 (kelas 5–6).',c:[['p','Pilih (1=10%, 2=20%, 3=25%, 4=50%)',1,4,3],['b','Bilangan',20,200,80,20]],
  f:v=>{const P=[10,20,25,50][v.p-1],c=['bagi 10','bagi 10 lalu kali 2','bagi 4','bagi 2'][v.p-1];return{h:`${P}% dari ${v.b} → ${c}`,s:`${P}% × ${v.b} = <b>${P*v.b/100}</b>`}}}]
 };
+const X={
+'Mengenal Bilangan 1–20':['Bilangan = lambang untuk menyatakan banyak benda.','Hitung benda satu per satu; benda terakhir menunjukkan jumlahnya.','Banyaknya apel.','Setiap benda baru menambah 1, jadi bilangan berikutnya selalu lebih 1.'],
+'Penjumlahan':['Jumlah = hasil menggabung. Tanda + dibaca "tambah".','Dua kelompok benda digabung menjadi satu.','Banyak semua benda setelah digabung.','Menggabung berarti banyaknya bertambah, jadi kita menambahkan kelompok kedua ke kelompok pertama.'],
+'Pengurangan':['Tanda − dibaca "kurang". Hasilnya disebut selisih atau sisa.','Benda yang ada sebagian diambil.','Benda yang masih tersisa.','Mengambil membuat jumlah berkurang: sisa = awal − diambil. Ini kebalikan dari penjumlahan.'],
+'Membandingkan Bilangan':['> lebih besar dari, < lebih kecil dari, = sama dengan.','Melihat kelompok mana yang lebih banyak.','Banyak benda di kedua kelompok.','Mulut tanda selalu terbuka ke bilangan yang lebih besar, seperti mulut yang mau memakan yang lebih banyak.'],
+'Bangun Datar':['Sisi = garis di tepi bangun. Sudut = tempat dua sisi bertemu.','Mengenali bangun dari cirinya.','Jumlah sisi dan sudut.','Bangun diberi nama dari ciri sisi dan sudutnya, bukan dari ukurannya.'],
+'Pola Bilangan':['Pola = urutan yang punya aturan. Selisih = naiknya tiap langkah.','Mencari aturan lalu melanjutkannya.','Selisih antara dua bilangan yang bersebelahan.','Aturannya sama di setiap langkah, jadi bilangan berikutnya = bilangan terakhir + selisih.'],
+'Nilai Tempat':['Satuan, puluhan, ratusan = nama tempat sebuah angka.','Angka yang sama bisa bernilai beda karena tempatnya beda.','Nilai tiap angka lalu dijumlahkan.','10 satuan = 1 puluhan dan 10 puluhan = 1 ratusan, makanya angka puluhan dikali 10 dan ratusan dikali 100.'],
+'Perkalian = Penjumlahan Berulang':['Tanda × dibaca "kali". 3 × 4 = 3 kelompok yang masing-masing berisi 4.','Menjumlahkan bilangan yang sama berkali-kali.','Banyak semua isi dari semua kelompok.','4 + 4 + 4 itu panjang. Perkalian adalah cara singkat menuliskannya: 3 × 4.'],
+'Membaca Jam':['Jarum pendek = jam. Jarum panjang = menit.','Baca jarum pendek dulu, lalu jarum panjang.','Jam dan menit yang ditunjuk jarum.','Satu putaran jarum panjang = 60 menit = 1 jam. Tiap angka = 5 menit, jadi angka 6 = 6 × 5 = 30 menit.'],
+'Penjumlahan Bersusun':['Bersusun = angka ditulis rata ke bawah sesuai tempatnya. Menyimpan = memindahkan 1 puluhan ke kiri.','Menjumlahkan angka puluhan dan satuan terpisah.','Satuan dengan satuan, lalu puluhan dengan puluhan.','Hanya angka di tempat yang sama yang boleh digabung. 10 satuan menjadi 1 puluhan, makanya harus disimpan.'],
+'Uang':['Rupiah (Rp) = satuan uang. Koin dan kertas punya nilai berbeda.','Yang dijumlahkan adalah nilai uangnya, bukan banyak lembarnya.','Total nilai semua uang.','Satu koin Rp500 bernilai 500, jadi 2 koin bernilai 2 × 500. Lalu semuanya dijumlahkan.'],
+'Mengukur Panjang':['cm = sentimeter, satuan panjang. Penggaris dimulai dari angka 0.','Ujung benda diletakkan tepat di angka 0.','Berapa cm dari 0 sampai ujung benda.','Setiap strip adalah 1 cm. Angka di ujung benda menunjukkan banyaknya jarak 1 cm yang dilewati.'],
+'Perkalian (Susunan Baris & Kolom)':['Baris = deretan mendatar. Kolom = deretan menurun.','Benda tersusun rapi dalam baris dan kolom.','Banyak semua petak.','Setiap baris berisi sama banyak, jadi jumlahnya = banyak baris × isi tiap baris (penjumlahan berulang).'],
+'Pembagian':['Tanda ÷ dibaca "bagi". Sisa = benda yang tidak habis terbagi.','Membagi benda sama rata ke beberapa kelompok.','Banyak benda di tiap kelompok.','Pembagian adalah kebalikan perkalian: 3 × 4 = 12, maka 12 ÷ 3 = 4.'],
+'Pecahan':['Pecahan = bagian dari keseluruhan. Penyebut = banyak bagian yang sama besar. Pembilang = banyak bagian yang diambil.','1/4 berarti 1 bagian dari 4 bagian sama besar.','Berapa bagian yang diambil dari seluruh bagian.','Bagian harus sama besar supaya adil. Penyebut memberi nama ukuran potongan, pembilang menghitung potongan yang diambil.'],
+'Membandingkan Pecahan':['Pembilang = bagian diambil. Penyebut = jumlah potongan.','Melihat bagian mana yang lebih panjang pada bar.','Panjang bagian yang diarsir pada tiap bar.','Penyebut makin besar berarti potongan makin kecil. Kalau penyebut beda, samakan dulu penyebutnya atau kalikan silang agar adil.'],
+'Perkalian di Garis Bilangan':['Loncatan = langkah dengan panjang yang sama.','Meloncat n kali sebesar k dari 0.','Posisi akhir setelah semua loncatan.','Setiap loncatan menambah k, jadi n loncatan = k + k + ... = n × k.'],
+'Uang dan Kembalian':['Kembalian = uang lebih yang dikembalikan penjual.','Uang dibayar dikurangi harga barang.','Selisih antara uang dibayar dan harga.','Kita membayar lebih besar dari harga, sisanya adalah hak kita. Maka dikurangi: kembalian = bayar − harga.'],
+'Pecahan Senilai':['Pecahan senilai = pecahan berbeda tulisan tetapi sama besar.','Membagi tiap potongan menjadi potongan lebih kecil.','Bagian yang diarsir tetap sama luasnya.','Jika setiap potongan dibagi k, potongan jadi k kali lebih banyak. Pembilang dan penyebut sama-sama dikali k, nilainya tidak berubah.'],
+'Keliling dan Luas':['Keliling = panjang garis di sekeliling bangun. Luas = banyak petak di dalam bangun.','Keliling mengukur tepi, luas mengukur isi.','Keliling: jumlah semua sisi. Luas: banyak petak.','Persegi panjang punya 2 sisi panjang dan 2 sisi lebar, maka keliling = 2 × (p + l). Petaknya p kolom × l baris, maka luas = p × l.'],
+'Sudut':['Sudut = besar putaran dua garis yang bertemu. Satuannya derajat (°).','Mengukur seberapa terbuka dua garis.','Besar bukaan dalam derajat.','Sudut siku-siku = 90°, garis lurus = 180°. Lancip kurang dari 90°, tumpul antara 90° dan 180°.'],
+'Pecahan Campuran':['Pecahan campuran = bilangan bulat + pecahan. Pecahan tak sebenarnya: pembilang ≥ penyebut.','Mengubah banyak potongan menjadi utuh ditambah sisa.','Berapa utuh yang bisa dibentuk dan sisa potongannya.','Setiap penyebut potongan membentuk 1 utuh. Jadi bagi pembilang dengan penyebut: hasilnya utuh, sisanya pembilang.'],
+'Pembulatan':['Dibulatkan = diganti bilangan terdekat yang lebih mudah.','Lihat angka satu tempat di belakang tempat yang dibulatkan.','Angka satuan: 5 atau lebih naik, kurang dari 5 turun.','5 berada tepat di tengah antara 0 dan 10. Jika sudah setengah atau lebih, bilangan lebih dekat ke puluhan berikutnya.'],
+'KPK dan FPB':['Kelipatan = hasil kali bilangan itu. KPK = kelipatan persekutuan terkecil. FPB = faktor persekutuan terbesar.','KPK: pertemuan pertama kelipatan. FPB: pembagi terbesar yang sama.','Daftar kelipatan, lalu cari yang sama pertama kali.','KPK dipakai saat kejadian berulang bertemu lagi. FPB dipakai membagi rata tanpa sisa. Hubungannya: KPK × FPB = A × B.'],
+'Penjumlahan Pecahan':['Penyebut sama = potongan sama besar.','Menggabung potongan yang ukurannya sama.','Pembilang saja yang dijumlahkan.','Potongan yang ukurannya sama bisa langsung dihitung, jadi penyebut tetap. Jika lewat satu utuh, ubah menjadi pecahan campuran.'],
+'Pecahan, Desimal, dan Persen':['Persen (%) = per seratus. Desimal memakai koma. Ketiganya cara menulis bagian.','Satu kotak dibagi 100 petak, lalu diisi sebagian.','Berapa petak dari 100 yang terisi.','35% = 35 per 100 = 35/100 = 0,35. Semuanya sama, hanya berbeda cara menulis.'],
+'Volume Balok':['Volume = banyak ruang di dalam benda. Satuannya kubik (cm³).','Menghitung banyak kubus kecil yang memenuhi balok.','Kubus satuan tiap lapis, lalu jumlah lapis.','Satu lapis berisi panjang × lebar kubus. Ditumpuk setinggi t lapis, maka V = p × l × t.'],
+'Perkalian Pecahan':['Pecahan dari pecahan = ambil sebagian dari sebagian.','Pecahan pertama dibagi dalam kolom, pecahan kedua dalam baris.','Petak yang bertumpuk dibanding semua petak.','Semua petak = penyebut × penyebut. Petak bertumpuk = pembilang × pembilang. Maka pembilang dikali pembilang, penyebut dikali penyebut.'],
+'Kecepatan, Jarak, Waktu':['Kecepatan = jarak yang ditempuh dalam 1 jam (km/jam).','Seberapa jauh mobil melaju per jam, lalu berapa jam.','Jarak total.','Tiap jam menempuh v km. Selama t jam, v + v + ... sebanyak t kali = v × t.'],
+'Luas Segitiga':['Alas = sisi bawah. Tinggi = jarak tegak lurus dari alas ke puncak.','Menghitung luas daerah di dalam segitiga.','Setengah dari luas persegi panjang yang alas dan tingginya sama.','Dua segitiga yang sama dapat disusun menjadi persegi panjang (alas × tinggi). Jadi satu segitiga = ½ × alas × tinggi.'],
+'Perbandingan (Rasio)':['Rasio a : b = membandingkan dua banyak.','Menyederhanakan rasio seperti menyederhanakan pecahan.','Membagi kedua bilangan dengan FPB-nya.','6 : 4 sama dengan 3 : 2 karena kedua banyak dibagi 2. Perbandingan tidak berubah jika keduanya dikali atau dibagi bilangan yang sama.'],
+'Lingkaran':['Jari-jari (r) = jarak pusat ke tepi. Diameter = 2 × r. π (pi) ≈ 3,14.','Keliling = panjang tepi. Luas = daerah di dalam.','Keliling dan luas dari jari-jari.','Keliling selalu sekitar 3,14 kali diameter, itulah π: K = π × 2r. Luas didapat dari irisan lingkaran yang disusun menjadi persegi panjang berukuran r × (π × r), maka L = π × r × r.'],
+'Bilangan Bulat (Garis Bilangan)':['Bilangan bulat = ..., −2, −1, 0, 1, 2, ... Negatif di kiri nol.','Bergerak di garis bilangan.','Posisi akhir setelah bergerak.','Menambah bilangan positif = geser ke kanan, menambah bilangan negatif = geser ke kiri sejauh angkanya.'],
+'Skala pada Peta':['Skala 1 : 100.000 = 1 cm di peta mewakili 100.000 cm sebenarnya.','Mengubah jarak di peta menjadi jarak asli.','Jarak peta × angka skala, lalu diubah ke km.','Peta adalah gambar yang diperkecil dengan perbandingan tetap. 100.000 cm = 1 km, jadi 1 cm peta = 1 km.'],
+'Statistika (Rata-rata, Median, Modus)':['Rata-rata = nilai yang adil jika dibagi rata. Median = nilai tengah. Modus = nilai paling sering muncul.','Meringkas banyak data menjadi satu angka.','Rata-rata = jumlah semua ÷ banyak data. Median = urutkan, ambil tengah. Modus = hitung yang paling sering.','Rata-rata dibagi rata seperti pembagian: jumlah semua nilai dibagi banyak nilai. Median butuh data diurutkan agar tengahnya benar.'],
+'Volume Tabung':['Tabung = bangun seperti kaleng. Alasnya lingkaran.','Menghitung isi tabung.','Luas alas lingkaran × tinggi.','Tabung adalah tumpukan lingkaran setinggi t. Satu lapis luasnya π × r × r, ditumpuk t kali: V = π × r × r × t.'],
+'Kali 9 dengan Jari':['Trik = cara cepat berhitung.','Lipat jari ke-n, hitung jari di kiri dan kanan lipatan.','Jari kiri = puluhan, jari kanan = satuan.','9 × n = 10 × n − n. Contoh 9 × 7 = 70 − 7 = 63. Hasilnya selalu (n−1) puluhan dan (10−n) satuan.'],
+'Kali 5: Kali 10 lalu Bagi 2':['Gandakan atau bagi dua = cara mudah.','Kali 10 dulu, lalu bagi 2.','Hasil kali bilangan dengan 5.','5 adalah setengah dari 10. Jadi n × 5 = (n × 10) ÷ 2.'],
+'Kali 11':['Menyimpan = menaikkan 1 ke angka sebelah kiri.','Tulis angka pertama dan terakhir, jumlahkan keduanya di tengah.','Hasil kali bilangan dua angka dengan 11.','n × 11 = n × 10 + n. Saat dijumlah, angka-angkanya bergeser satu tempat sehingga angka tengahnya adalah jumlah dua angka.'],
+'Tambah 7, 8, atau 9':['Menambah dekat puluhan = menambah 10 lalu mengurangi kelebihan.','+ 9 menjadi + 10 − 1.','Hasil penjumlahan dengan lebih mudah.','9 = 10 − 1, jadi menambah 9 sama dengan menambah 10 lalu mengurangi 1. Menambah 10 mudah: cukup geser puluhan.'],
+'Kuadrat Bilangan Berakhiran 5':['Kuadrat = bilangan dikali dirinya sendiri.','Angka depan × (angka depan + 1), lalu tulis 25.','Hasil kuadrat bilangan berakhiran 5.','(10t + 5)² = 100t² + 100t + 25 = 100 × t × (t+1) + 25. Karena itu "t × (t+1)" lalu "25" di belakang.'],
+'Buat 10 Dulu (Metode Singapura)':['Pasangan 10 = dua bilangan yang jumlahnya 10.','Pecah bilangan kedua agar bilangan pertama menjadi 10.','8 + 5 = 8 + 2 + 3 = 10 + 3.','10 adalah bilangan yang mudah dijumlah. Memecah bilangan tidak mengubah jumlahnya, hanya membuat langkahnya lebih mudah.'],
+'Kurang 7, 8, atau 9':['Kompensasi = mengganti angka sulit dengan angka mudah, lalu diperbaiki.','Kurangi 10 dulu, lalu tambahkan kembali kelebihannya.','Hasil pengurangan.','9 = 10 − 1. Mengurangi 10 itu terlalu banyak 1, jadi hasilnya ditambah 1 kembali.'],
+'Kali 4 dan Kali 8: Gandakan':['Menggandakan = dikali 2.','Gandakan 2 kali untuk ×4, 3 kali untuk ×8.','Hasil kali dengan 4 atau 8.','4 = 2 × 2 dan 8 = 2 × 2 × 2. Mengalikan beruntun sama dengan mengalikan hasilnya.'],
+'Kali dengan Memecah Bilangan':['Memecah = membagi bilangan menjadi puluhan dan satuan.','34 × 6 = (30 × 6) + (4 × 6).','Dua perkalian kecil lalu dijumlahkan.','34 = 30 + 4. Jika 34 kelompok berisi 6, sama dengan 30 kelompok ditambah 4 kelompok. Perkalian bisa dipecah.'],
+'Bagi 5: Kali 2 lalu Bagi 10':['Kebalikan = cara berlawanan yang hasilnya sama.','Kali 2 dulu, lalu bagi 10.','Hasil bagi dengan 5.','2/10 = 1/5. Jadi dibagi 5 sama dengan dikali 2 lalu dibagi 10.'],
+'Persen Cepat':['Persen = per seratus. 10% = 10/100 = 1/10.','Ubah persen ke bagian sederhana: 10% = ÷10, 25% = ÷4, 50% = ÷2.','Bagian dari bilangan.','10/100 = 1/10, 25/100 = 1/4, 50/100 = 1/2. Mengambil 1/4 sama dengan membagi 4.']
+};
+const XL=['📌 Istilah','💡 Maksudnya','🧮 Yang dihitung','🤔 Kenapa rumusnya begitu?'];
+const XP=t=>X[t]?`<details open class=ex><summary>📖 Ayo pahami dulu</summary>${X[t].map((x,i)=>`<p><b>${XL[i]}:</b> ${x}</p>`).join('')}${CS[t]?`<p><button class=bt onclick="ct()">🎯 Coba sendiri</button></p><div id=cb></div>`:''}</details>`:'';
 const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 const Q={
 1:[()=>{const a=R(1,10),b=R(1,10);return[`${a} + ${b} = ?`,a+b,'Penjumlahan']},
@@ -195,6 +247,28 @@ const Q={
 ()=>{const a=R(-9,9),b=R(-9,9);return[`${a} + (${b}) = ?`,a+b,'Bilangan Bulat (Garis Bilangan)']},
 ()=>{const p=[10,20,25,50][R(0,3)],b=[60,120,160,400][R(0,3)];return[`${p}% dari ${b} = ?`,p*b/100,'Persen Cepat']}]
 };
+const EX={
+'Mengenal Bilangan 1–20':[()=>{const n=R(1,19);return[`Bilangan sesudah ${n} adalah ...`,n+1]}],
+'Bangun Datar':[()=>{const b=[['Segitiga',3],['Persegi',4],['Persegi panjang',4]][R(0,2)];return[`${b[0]} memiliki ... sisi`,b[1]]}],
+'Mengukur Panjang':[()=>{const n=R(2,15);return[`Pensil dimulai dari angka 0 dan berakhir di angka ${n}. Panjangnya (cm)?`,n]}],
+'Membandingkan Pecahan':[()=>{const a=R(2,8);let b=R(2,8);if(b==a)b++;return[`Mana yang lebih besar: 1/${a} atau 1/${b}? (jawab dengan penyebutnya)`,Math.min(a,b)]}],
+'Pecahan, Desimal, dan Persen':[()=>{const x=R(1,9);return[`0,${x} = ...%`,x*10]}],
+'Perkalian Pecahan':[()=>{const a=R(1,3),c=R(1,3),b=R(2,5),d=R(2,5);return[`${a}/${b} × ${c}/${d} = ?/${b*d}`,a*c]}],
+'Volume Tabung':[()=>{const t=R(2,6);return[`Tabung r = 7 cm, tinggi ${t} cm, π = 22/7. Volumenya (cm³)?`,154*t]}],
+'Kali 9 dengan Jari':[()=>{const n=R(2,10);return[`9 × ${n} = ?`,9*n]}],
+'Kali 5: Kali 10 lalu Bagi 2':[()=>{const n=R(12,40);return[`${n} × 5 = ?`,n*5]}],
+'Kali 11':[()=>{const n=R(12,45);return[`${n} × 11 = ?`,n*11]}],
+'Tambah 7, 8, atau 9':[()=>{const a=R(21,80),b=R(7,9);return[`${a} + ${b} = ?`,a+b]}],
+'Kuadrat Bilangan Berakhiran 5':[()=>{const t=R(1,9);return[`${t}5 × ${t}5 = ?`,t*(t+1)*100+25]}],
+'Buat 10 Dulu (Metode Singapura)':[()=>{const a=R(6,9),b=R(5,9);return[`${a} + ${b} = ?`,a+b]}],
+'Kurang 7, 8, atau 9':[()=>{const a=R(31,90),b=R(7,9);return[`${a} − ${b} = ?`,a-b]}],
+'Kali 4 dan Kali 8: Gandakan':[()=>{const n=R(2,25),k=[4,8][R(0,1)];return[`${n} × ${k} = ?`,n*k]}],
+'Bagi 5: Kali 2 lalu Bagi 10':[()=>{const n=5*R(4,40);return[`${n} ÷ 5 = ?`,n/5]}]};
+const CS={};for(const k in EX)CS[k]=EX[k];
+for(const k in Q)for(const f of Q[k]){const m=f()[2];(CS[m]=CS[m]||[]).push(f)}
+function ct(){const f=CS[cur.t][R(0,CS[cur.t].length-1)],[q,a]=f(),o=new Set([a]);while(o.size<4){const x=a+[1,2,3,5,10][R(0,4)]*(R(0,1)?1:-1);if(a>=0&&x<0)continue;o.add(x)}
+ $('#cb').innerHTML=`<div class=ex style="margin-top:8px"><b>🎯 ${q}</b><div class=opt>${[...o].sort(()=>Math.random()-.5).map(x=>`<button class=bt onclick="cj(${x},${a})">${x}</button>`).join('')}</div><div id=cf></div></div>`}
+function cj(x,a){document.querySelectorAll('#cb .opt button').forEach(z=>{z.disabled=true;if(+z.textContent==a)z.style.background='#22c55e55'});$('#cf').innerHTML=(x==a?'✅ Benar! Hebat!':`❌ Belum tepat. Jawabannya <b>${a}</b>. Baca lagi kotak penjelasan di atas ya.`)+'<br><button class=bt onclick="ct()">🔁 Soal lain</button>'}
 for(let k=1;k<=6;k++)T[k].push({t:'Latihan Soal Kelas '+k,e:'📝',prac:1});
 let qs=[],qi=0,sc=0,st={},tl=0,tt=0;const NQ=20;
 function qz(){clearInterval(tt);st={};qs=Array.from({length:NQ},()=>{const f=Q[g][R(0,Q[g].length-1)],[q,a,m]=f(),o=new Set([a]);while(o.size<4){const x=a+[1,2,3,5,10][R(0,4)]*(R(0,1)?1:-1);if(a>=0&&x<0)continue;o.add(x)}return{q,a,m,o:[...o].sort(()=>Math.random()-.5)}});qi=0;sc=0;qn()}
@@ -211,7 +285,7 @@ const tabs=$('#tabs'),list=$('#list'),sim=$('#sim');
 function drawTabs(){tabs.innerHTML=[1,2,3,4,5,6,7].map(k=>`<button class="${k==g?'on':''}" onclick="g=${k};drawTabs();pick(0)">${k==7?'⚡ Trik Cepat':'Kelas '+k}</button>`).join('');
  list.innerHTML=T[g].map((x,i)=>`<button id="b${i}" onclick="pick(${i})">${x.e} <b>${x.t}</b></button>`).join('')}
 function pick(i){cur=T[g][i];document.querySelectorAll('.list button').forEach((b,j)=>b.classList.toggle('on',j==i));if(cur.prac)return qz();
- sim.innerHTML=`<h2>${cur.e} ${cur.t} ${g<7?`<span class=lb>(Kelas ${g})</span>`:''}</h2><p class=d>${cur.d}</p>`+cur.c.map(c=>`<label>${c[1]}: <b id="v_${c[0]}">${c[4]}</b><input type=range id="${c[0]}" min=${c[2]} max=${c[3]} step=${c[5]||1} value=${c[4]} oninput="upd()"></label>`).join('')+'<div id=out></div><div id=sum></div>';upd()}
+ sim.innerHTML=`<h2>${cur.e} ${cur.t} ${g<7?`<span class=lb>(Kelas ${g})</span>`:''}</h2><p class=d>${cur.d}</p>${XP(cur.t)}`+cur.c.map(c=>`<label>${c[1]}: <b id="v_${c[0]}">${c[4]}</b><input type=range id="${c[0]}" min=${c[2]} max=${c[3]} step=${c[5]||1} value=${c[4]} oninput="upd()"></label>`).join('')+'<div id=out></div><div id=sum></div>';upd()}
 function upd(){const v={};cur.c.forEach(c=>{v[c[0]]=+$('#'+c[0]).value;$('#v_'+c[0]).textContent=v[c[0]]});const r=cur.f(v);$('#out').innerHTML=r.h;$('#sum').innerHTML=r.s}
 drawTabs();pick(0);
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
